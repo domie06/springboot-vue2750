@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.XinxiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.xinxi_name as xinxiName
+        ,a.xinxi_photo as xinxiPhoto
+        ,a.xinxi_video as xinxiVideo
+        ,a.xinxi_types as xinxiTypes
+        ,a.zan_number as zanNumber
+        ,a.cai_number as caiNumber
+        ,a.xinxi_clicknum as xinxiClicknum
+        ,a.shangxia_types as shangxiaTypes
+        ,a.xinxi_content as xinxiContent
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.XinxiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+
+        FROM xinxi  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.xinxiName != '' and params.xinxiName != null and params.xinxiName != 'null' ">
+                and a.xinxi_name like CONCAT('%',#{params.xinxiName},'%')
+            </if>
+            <if test=" params.xinxiVideo != '' and params.xinxiVideo != null and params.xinxiVideo != 'null' ">
+                and a.xinxi_video like CONCAT('%',#{params.xinxiVideo},'%')
+            </if>
+            <if test="params.xinxiTypes != null and params.xinxiTypes != ''">
+                and a.xinxi_types = #{params.xinxiTypes}
+            </if>
+            <if test="params.zanNumberStart != null and params.zanNumberStart != ''">
+                <![CDATA[  and a.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null and params.zanNumberEnd != ''">
+                <![CDATA[  and a.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+             <if test="params.zanNumber != null and params.zanNumber != ''">
+                and a.zan_number = #{params.zanNumber}
+             </if>
+            <if test="params.caiNumberStart != null and params.caiNumberStart != ''">
+                <![CDATA[  and a.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null and params.caiNumberEnd != ''">
+                <![CDATA[  and a.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+             <if test="params.caiNumber != null and params.caiNumber != ''">
+                and a.cai_number = #{params.caiNumber}
+             </if>
+            <if test="params.xinxiClicknumStart != null and params.xinxiClicknumStart != ''">
+                <![CDATA[  and a.xinxi_clicknum >= #{params.xinxiClicknumStart}   ]]>
+            </if>
+            <if test="params.xinxiClicknumEnd != null and params.xinxiClicknumEnd != ''">
+                <![CDATA[  and a.xinxi_clicknum <= #{params.xinxiClicknumEnd}   ]]>
+            </if>
+             <if test="params.xinxiClicknum != null and params.xinxiClicknum != ''">
+                and a.xinxi_clicknum = #{params.xinxiClicknum}
+             </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test=" params.xinxiContent != '' and params.xinxiContent != null and params.xinxiContent != 'null' ">
+                and a.xinxi_content like CONCAT('%',#{params.xinxiContent},'%')
+            </if>
+
+        </where>
+
+        order by a.${params.orderBy} desc 
+    </select>
+
+</mapper>
